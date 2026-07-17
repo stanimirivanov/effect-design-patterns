@@ -1,0 +1,60 @@
+import { describe, test, expect } from "bun:test"
+import { Effect, Option, Stream } from "effect"
+import { make, type Document } from "../src/document.js"
+
+const KEY = "key"
+const VALUE = "value"
+
+describe("Document", () => {
+  test("should put and get value", () => {
+    const document = make({}).put(KEY, VALUE)
+    expect(Option.getOrThrow(document.get(KEY))).toBe(VALUE)
+  })
+
+  test("should retrieve children", async () => {
+    const document = make({}).put(KEY, [{}, {}])
+    const stream = document.children(KEY, (props) => make(props))
+    const count = await Effect.runPromise(Stream.runCount(stream))
+    expect(count).toBe(2)
+  })
+
+  test("should retrieve empty stream for non-existing children", async () => {
+    const document = make({})
+    const stream = document.children(KEY, (props) => make(props))
+    const count = await Effect.runPromise(Stream.runCount(stream))
+    expect(count).toBe(0)
+  })
+
+  test("should include props in toString", () => {
+    const document = make({ [KEY]: VALUE })
+    expect(document.toString()).toContain(KEY)
+    expect(document.toString()).toContain(VALUE)
+  })
+
+  test("should throw when constructed with null properties", () => {
+    expect(() => make(null as unknown as Record<string, unknown>)).toThrow()
+  })
+
+  test("should put and get nested document", () => {
+    const nested = make({}).put("nestedKey", "nestedValue")
+    const document = make({}).put("nested", nested)
+
+    const retrieved = Option.getOrThrow(document.get("nested")) as Document
+    expect(Option.getOrThrow(retrieved.get("nestedKey"))).toBe("nestedValue")
+  })
+
+  test("should update existing value", () => {
+    const original = make({}).put(KEY, "originalValue")
+    expect(Option.getOrThrow(original.get(KEY))).toBe("originalValue")
+
+    const updated = original.put(KEY, "updatedValue")
+    expect(Option.getOrThrow(updated.get(KEY))).toBe("updatedValue")
+
+    // Behavior difference from the Java original: Java's `put` mutates the
+    // same backing map, so re-reading `document.get(key)` on the original
+    // reference reflects the new value. Here `put` returns a new Document
+    // and leaves `original` untouched - this assertion is the difference,
+    // not incidental.
+    expect(Option.getOrThrow(original.get(KEY))).toBe("originalValue")
+  })
+})

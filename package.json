@@ -1,13 +1,13 @@
 {
-  "name": "abstract-document",
+  "name": "effect-design-patterns",
   "version": "0.1.0",
-  "description": "Abstract Document pattern - TypeScript/Effect port of the Java original (see README.md)",
+  "description": "TypeScript/Effect port of iluwatar/java-design-patterns, pattern by pattern",
   "type": "module",
   "private": true,
   "scripts": {
-    "start": "bun run src/main.ts",
     "test": "bun test",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "abstract-document": "bun run abstract-document/src/main.ts"
   },
   "dependencies": {
     "effect": "^3.22.0"

@@ -1,0 +1,8 @@
+export { type Document, make } from "./document.js"
+export { Property } from "./property.js"
+export { type Part, makePart } from "./part.js"
+export { type Car, makeCar } from "./car.js"
+export { type HasType, hasType } from "./traits/hasType.js"
+export { type HasModel, hasModel } from "./traits/hasModel.js"
+export { type HasPrice, hasPrice } from "./traits/hasPrice.js"
+export { type HasParts, hasParts } from "./traits/hasParts.js"
