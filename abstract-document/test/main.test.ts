@@ -1,6 +1,6 @@
 import { describe, test } from "bun:test"
 import { Effect } from "effect"
-import { program } from "../src/main.js"
+import { program } from "../src/main"
 
 describe("main", () => {
   test("should execute program without throwing", async () => {

@@ -1,8 +1,8 @@
 import { pipe } from "effect"
-import { make, type Document } from "./document.js"
-import { hasType, type HasType } from "./traits/hasType.js"
-import { hasModel, type HasModel } from "./traits/hasModel.js"
-import { hasPrice, type HasPrice } from "./traits/hasPrice.js"
+import { make, type Document } from "./document"
+import { hasType, type HasType } from "./traits/hasType"
+import { hasModel, type HasModel } from "./traits/hasModel"
+import { hasPrice, type HasPrice } from "./traits/hasPrice"
 
 /**
  * Java: `class Part extends AbstractDocument implements HasType, HasModel,

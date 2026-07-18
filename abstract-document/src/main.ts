@@ -1,6 +1,6 @@
 import { Effect, Option, Stream } from "effect"
-import { makeCar } from "./car.js"
-import { Property } from "./property.js"
+import { makeCar } from "./car"
+import { Property } from "./property"
 
 /**
  * Java's `App.main` is an imperative method that logs via SLF4J/Logback.

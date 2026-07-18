@@ -1,6 +1,6 @@
 import { Option, Schema, pipe } from "effect"
-import type { Document } from "../document.js"
-import { Property } from "../property.js"
+import type { Document } from "../document"
+import { Property } from "../property"
 
 /**
  * Java's HasPrice types its getter as `Optional<Number>` - `Number` being

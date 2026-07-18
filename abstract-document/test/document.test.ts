@@ -1,6 +1,6 @@
 import { describe, test, expect } from "bun:test"
 import { Effect, Option, Stream } from "effect"
-import { make, type Document } from "../src/document.js"
+import { make, type Document } from "../src/document"
 
 const KEY = "key"
 const VALUE = "value"

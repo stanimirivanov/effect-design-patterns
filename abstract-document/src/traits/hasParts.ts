@@ -1,7 +1,7 @@
 import type { Stream } from "effect"
-import type { Document } from "../document.js"
-import { Property } from "../property.js"
-import { makePart, type Part } from "../part.js"
+import type { Document } from "../document"
+import { Property } from "../property"
+import { makePart, type Part } from "../part"
 
 /**
  * Java: `Stream<Part> getParts() { return children(Property.PARTS...,
