@@ -4,13 +4,11 @@ import { Property } from "./property"
 import { makePart, type Part } from "./part"
 
 /**
- * Java: `Stream<Part> getParts() { return children(Property.PARTS...,
- * Part::new); }` - `java.util.stream.Stream` is a pull-based, lazy
- * sequence you consume once. Effect's `Stream` module is the same idea
- * scaled up (it also supports async steps, backpressure, resource-safe
- * acquisition, retries...), so it's a close conceptual match even though
- * this particular usage only needs the synchronous, in-memory subset of
- * what Effect's Stream can do.
+ * Adds typed access to the `PARTS` property.
+ *
+ * Child documents are returned as an Effect `Stream`, allowing lazy
+ * traversal using the same API for both in-memory and asynchronous data
+ * sources.
  */
 export interface HasParts {
   readonly getParts: () => Stream.Stream<Part>

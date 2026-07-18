@@ -2,13 +2,11 @@ import { Option, Stream, pipe } from "effect"
 import type { Document } from "./document"
 
 /**
- * Constructs a Document over an immutable property bag.
+ * Creates the default immutable implementation of `Document`.
  *
- * Java's `AbstractDocument` constructor fails fast via
- * `Objects.requireNonNull`. TypeScript's type system already forbids
- * passing `null`/`undefined` at compile time, but since that guarantee
- * disappears at runtime (e.g. data from JSON.parse, or a caller ignoring
- * types with `as any`), the same runtime check is kept here for parity.
+ * Properties are stored in a readonly map. Updating a property creates a
+ * new document with the modified property set while leaving the original
+ * document unchanged.
  */
 export const makeDocument = (properties: Readonly<Record<string, unknown>>): Document => {
   if (properties == null) {
@@ -19,6 +17,13 @@ export const makeDocument = (properties: Readonly<Record<string, unknown>>): Doc
 
   const put = (key: string, value: unknown): Document => makeDocument({ ...properties, [key]: value })
 
+  /**
+   * Converts the property value into a lazy `Stream` of child documents.
+   *
+   * `Option.match` selects between two branches depending on whether the
+   * property exists. `Stream.fromIterable` lazily emits each child, while
+   * `Stream.map` constructs the requested document type.
+   */
   const children = <T>(
     key: string,
     constructor: (properties: Record<string, unknown>) => T

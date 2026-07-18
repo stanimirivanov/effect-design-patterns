@@ -1,26 +1,15 @@
 import { Option, Stream, pipe } from "effect"
 
 /**
- * Document is the structural equivalent of the Java `Document` interface +
- * `AbstractDocument` base class combined into one. Java splits these because
- * an interface can't hold state; a plain object with closures doesn't need
- * that split.
+ * A document stores arbitrary properties and provides a small set of
+ * operations for retrieving values, updating the document and traversing
+ * child documents.
  *
- * Two deliberate differences from the Java original, flagged here and in
- * the pattern README:
+ * The API is immutable. Calling `put()` returns a new `Document` while the
+ * original instance remains unchanged.
  *
- * 1. `get` returns `Option<unknown>` directly, not a nullable `Object`. In
- *    Java only the typed trait getters (HasType, HasModel, ...) wrap the
- *    result in `Optional`; the base `Document.get` returns a raw nullable
- *    reference. Here the base method itself returns `Option`, since
- *    "absence" is modeled with `Option` throughout this codebase rather
- *    than at just the typed boundary.
- *
- * 2. `put` is immutable: it returns a *new* Document with the key set,
- *    instead of mutating the underlying map and returning `Void`. This is
- *    a genuine behavior change, not just a syntax swap - see
- *    `test/document.test.ts` ("should update existing value") for a test
- *    that demonstrates the original object is left untouched.
+ * Effect's `Option` models optional values without using `null`, and
+ * `Stream` provides lazy access to child documents.
  */
 export interface Document {
   readonly properties: Readonly<Record<string, unknown>>

@@ -5,7 +5,9 @@ import { hasModel, type HasModel } from "./hasModel"
 import { hasPrice, type HasPrice } from "./hasPrice"
 import { hasParts, type HasParts } from "./hasParts"
 
-/** Java: `class Car extends AbstractDocument implements HasModel, HasPrice, HasParts`. */
+/**
+ * Example document representing a car.
+ */
 export type Car = Document & HasModel & HasPrice & HasParts
 
 export const makeCar = (properties: Readonly<Record<string, unknown>>): Car =>

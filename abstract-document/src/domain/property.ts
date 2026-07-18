@@ -1,12 +1,8 @@
 /**
- * Java's `Property` is a real enum (`PARTS, TYPE, PRICE, MODEL`), used via
- * `Property.MODEL.toString()` to get the string key "MODEL".
+ * Property keys used by the example domain.
  *
- * TypeScript's own `enum` keyword produces extra runtime code (a reverse
- * lookup object) that most style guides steer away from, and it isn't part
- * of the Effect ecosystem's idiom. A `const` object + derived union type is
- * the standard replacement: same call-site shape (`Property.MODEL`),
- * string-valued, no runtime overhead beyond a plain object literal.
+ * A `const` object provides compile-time literal types while avoiding the
+ * runtime overhead of TypeScript enums.
  */
 export const Property = {
   TYPE: "TYPE",

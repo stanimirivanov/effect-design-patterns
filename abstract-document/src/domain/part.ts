@@ -6,10 +6,7 @@ import { hasModel, type HasModel } from "./hasModel"
 import { hasPrice, type HasPrice } from "./hasPrice"
 
 /**
- * Java: `class Part extends AbstractDocument implements HasType, HasModel,
- * HasPrice`. The `pipe` chain below is the composition step that stands in
- * for `implements` - each `hasX` call adds one method to the object,
- * mirroring how each interface contributed one default method in Java.
+ * Example document representing a car part.
  */
 export type Part = Document & HasType & HasModel & HasPrice
 
