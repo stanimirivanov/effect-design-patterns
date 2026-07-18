@@ -1,8 +1,8 @@
 import { describe, test, expect } from "bun:test"
 import { Effect, Option, Stream } from "effect"
-import { makePart } from "../src/part"
-import { makeCar } from "../src/car"
-import { Property } from "../src/property"
+import { makePart } from "@domain/part"
+import { makeCar } from "@domain/car"
+import { Property } from "@domain/property"
 
 const TEST_PART_TYPE = "test-part-type"
 const TEST_PART_MODEL = "test-part-model"

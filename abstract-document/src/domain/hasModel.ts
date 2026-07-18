@@ -1,6 +1,6 @@
 import { Option, Schema, pipe } from "effect"
-import type { Document } from "../document"
-import { Property } from "../property"
+import type { Document } from "@abstractdocument/document"
+import { Property } from "./property"
 
 /** See hasType.ts for the rationale behind this trait-as-function shape. */
 export interface HasModel {

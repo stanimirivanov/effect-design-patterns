@@ -1,6 +1,6 @@
 import { Option, Schema, pipe } from "effect"
-import type { Document } from "../document"
-import { Property } from "../property"
+import type { Document } from "@abstractdocument/document"
+import { Property } from "./property"
 
 /**
  * Java's traits are interfaces with *default methods*: `HasType extends
