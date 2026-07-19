@@ -1,5 +1,7 @@
 {
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "files.autoSave": "afterDelay"
+  "files.autoSave": "afterDelay",
+  "workbench.tree.indent": 16,
+  "explorer.compactFolders": false
 }

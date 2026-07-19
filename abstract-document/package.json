@@ -1,14 +1,13 @@
 {
   "name": "abstract-document",
   "version": "0.1.0",
-  "description": "Abstract Document pattern - TypeScript/Effect port of the Java original (see README.md)",
+  "description": "Abstract Document pattern - TypeScript/Effect",
   "type": "module",
   "private": true,
   "scripts": {
     "start": "bun run src/main.ts",
     "test": "bun test",
-    "typecheck": "tsc --noEmit",
-    "typecheck:watch": "tsc --noEmit --watch"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "effect": "^3.22.0"

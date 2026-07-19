@@ -5,7 +5,8 @@
   "type": "module",
   "private": true,
   "workspaces": [
-    "abstract-document"
+    "abstract-document",
+    "abstract-factory"
   ],
   "scripts": {
     "typecheck": "bun --filter '*' typecheck",
