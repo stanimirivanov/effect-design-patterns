@@ -1,6 +1,6 @@
-import { Option, Schema, pipe } from "effect"
-import type { Document } from "@abstractdocument/document"
-import { Property } from "./property"
+import { Option, Schema, pipe } from 'effect';
+import type { Document } from '@abstractdocument/document';
+import { Property } from './property';
 
 /**
  * Adds typed access to the `MODEL` property.
@@ -10,14 +10,10 @@ import { Property } from "./property"
  * returning `Option.none()` if decoding fails.
  */
 export interface HasModel {
-  readonly getModel: () => Option.Option<string>
+  readonly getModel: () => Option.Option<string>;
 }
 
 export const hasModel = <T extends Document>(document: T): T & HasModel => ({
   ...document,
-  getModel: () =>
-     pipe(
-      document.get(Property.MODEL), 
-      Option.flatMap(Schema.decodeUnknownOption(Schema.String))
-    )
-})
+  getModel: () => pipe(document.get(Property.MODEL), Option.flatMap(Schema.decodeUnknownOption(Schema.String))),
+});

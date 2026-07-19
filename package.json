@@ -1,19 +1,32 @@
 {
   "name": "effect-design-patterns",
   "version": "0.1.0",
-  "description": "TypeScript/Effect port of iluwatar/java-design-patterns, pattern by pattern",
+  "description": "TypeScript/Effect design patterns",
   "type": "module",
   "private": true,
+  "workspaces": [
+    "abstract-document"
+  ],
   "scripts": {
-    "test": "bun test",
-    "typecheck": "tsc --noEmit",
-    "abstract-document": "bun run abstract-document/src/main.ts"
+    "typecheck": "bun --filter '*' typecheck",
+    "lint": "eslint . --cache --concurrency auto",
+    "lint:fix": "eslint . --cache --concurrency auto --fix",
+    "prepare": "husky install"
   },
   "dependencies": {
     "effect": "^3.22.0"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/bun": "^1.3.14",
-    "typescript": "^5.9.3"
+    "@typescript-eslint/eslint-plugin": "^8.60.0",
+    "@typescript-eslint/parser": "^8.60.0",
+    "eslint": "^10.7.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "husky": "^9.0.11",
+    "prettier": "^3.9.5",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.64.0"
   }
 }

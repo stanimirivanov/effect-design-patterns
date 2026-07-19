@@ -1,8 +1,8 @@
-import { Option, Stream } from "effect"
+import { Option, Stream } from 'effect';
 
-export type DocumentProperties = Readonly<Record<string, unknown>>
+export type DocumentProperties = Readonly<Record<string, unknown>>;
 
-export type ChildConstructor<T> = (properties: DocumentProperties) => T
+export type ChildConstructor<T> = (properties: DocumentProperties) => T;
 
 /**
  * A document stores arbitrary properties and provides a small set of
@@ -16,9 +16,9 @@ export type ChildConstructor<T> = (properties: DocumentProperties) => T
  * `Stream` provides lazy access to child documents.
  */
 export interface Document {
-  readonly properties: Readonly<Record<string, unknown>>
-  readonly get: (key: string) => Option.Option<unknown>
-  readonly put: (key: string, value: unknown) => Document
-  readonly children: <T>(key: string, constructor: ChildConstructor<T>) => Stream.Stream<T>
-  readonly toString: () => string
+  readonly properties: Readonly<Record<string, unknown>>;
+  readonly get: (key: string) => Option.Option<unknown>;
+  readonly put: (key: string, value: unknown) => Document;
+  readonly children: <T>(key: string, constructor: ChildConstructor<T>) => Stream.Stream<T>;
+  readonly toString: () => string;
 }

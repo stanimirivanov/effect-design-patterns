@@ -1,15 +1,10 @@
 {
   "compilerOptions": {
-    "paths": {
-      "@abstractdocument/*": ["./src/abstractdocument/*"],
-      "@domain/*": ["./src/domain/*"]
-    },
     // Environment setup & latest features
     "lib": ["ESNext"],
     "target": "ESNext",
     "module": "Preserve",
     "moduleDetection": "force",
-    "jsx": "react-jsx",
     "allowJs": true,
     "types": ["bun"],
 
@@ -30,6 +25,5 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noPropertyAccessFromIndexSignature": false
-  },
-  "include": ["src", "test"]
+  }
 }

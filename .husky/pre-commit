@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+
+export PATH="$PATH:$USERPROFILE/.bun/bin"
+
+bun typecheck && bun lint

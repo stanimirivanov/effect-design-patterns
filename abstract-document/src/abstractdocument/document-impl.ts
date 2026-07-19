@@ -1,5 +1,5 @@
-import { Option, Stream, pipe } from "effect"
-import type { ChildConstructor, Document, DocumentProperties } from "./document"
+import { Option, Stream, pipe } from 'effect';
+import type { ChildConstructor, Document, DocumentProperties } from './document';
 
 /**
  * Creates the default immutable implementation of `Document`.
@@ -10,12 +10,12 @@ import type { ChildConstructor, Document, DocumentProperties } from "./document"
  */
 export const makeDocument = (properties: DocumentProperties): Document => {
   if (properties == null) {
-    throw new Error("properties map is required")
+    throw new Error('properties map is required');
   }
 
-  const get = (key: string): Option.Option<unknown> => Option.fromNullable(properties[key])
+  const get = (key: string): Option.Option<unknown> => Option.fromNullable(properties[key]);
 
-  const put = (key: string, value: unknown): Document => makeDocument({ ...properties, [key]: value })
+  const put = (key: string, value: unknown): Document => makeDocument({ ...properties, [key]: value });
 
   /**
    * Converts the property value into a lazy `Stream` of child documents.
@@ -31,26 +31,23 @@ export const makeDocument = (properties: DocumentProperties): Document => {
         onNone: () => Stream.empty,
         onSome: (value) =>
           Array.isArray(value)
-            ? pipe(
-                Stream.fromIterable(value as ReadonlyArray<Record<string, unknown>>),
-                Stream.map(constructor)
-              )
-            : Stream.empty
+            ? pipe(Stream.fromIterable(value as ReadonlyArray<Record<string, unknown>>), Stream.map(constructor))
+            : Stream.empty,
       })
-    )
+    );
 
   return {
     properties,
     get,
     put,
     children,
-    toString: () => toDebugString(properties)
-  }
-}
+    toString: () => toDebugString(properties),
+  };
+};
 
 const toDebugString = (properties: DocumentProperties): string => {
   const entries = Object.entries(properties)
     .map(([key, value]) => `[${key} : ${value}]`)
-    .join(", ")
-  return `Document[${entries}]`
-}
+    .join(', ');
+  return `Document[${entries}]`;
+};
