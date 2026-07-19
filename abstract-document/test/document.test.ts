@@ -50,12 +50,6 @@ describe("Document", () => {
 
     const updated = original.put(KEY, "updatedValue")
     expect(Option.getOrThrow(updated.get(KEY))).toBe("updatedValue")
-
-    // Behavior difference from the Java original: Java's `put` mutates the
-    // same backing map, so re-reading `document.get(key)` on the original
-    // reference reflects the new value. Here `put` returns a new Document
-    // and leaves `original` untouched - this assertion is the difference,
-    // not incidental.
     expect(Option.getOrThrow(original.get(KEY))).toBe("originalValue")
   })
 })

@@ -43,12 +43,12 @@ point is not needing to.
 
 ```typescript
 export interface Document {
-    readonly properties: Readonly<Record<string, unknown>>
+    readonly properties: DocumentProperties
     readonly get: (key: string) => Option.Option<unknown>
     readonly put: (key: string, value: unknown) => Document
     readonly children: <T>(
         key: string,
-        constructor: (properties: Record<string, unknown>) => T
+        constructor: ChildConstructor<T>
     ) => Stream.Stream<T>
 }
 ```
@@ -67,10 +67,10 @@ export const hasModel = <T extends Document>(document: T): T & HasModel => ({
 `Car` and `Part` are built by piping a base `Document` through the traits they need:
 
 ```typescript
-export const makeCar = (properties: Readonly<Record<string, unknown>>): Car =>
+export const makeCar = (properties: DocumentProperties): Car =>
     pipe(make(properties), hasModel, hasPrice, hasParts)
 
-export const makePart = (properties: Readonly<Record<string, unknown>>): Part =>
+export const makePart = (properties: DocumentProperties): Part =>
     pipe(make(properties), hasType, hasModel, hasPrice)
 ```
 

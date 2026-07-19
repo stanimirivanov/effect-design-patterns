@@ -1,5 +1,5 @@
 import { pipe } from "effect"
-import { type Document } from "@abstractdocument/document"
+import type { Document, DocumentProperties } from "@abstractdocument/document"
 import { makeDocument } from "@abstractdocument/document-impl"
 import { hasType, type HasType } from "./hasType"
 import { hasModel, type HasModel } from "./hasModel"
@@ -10,5 +10,10 @@ import { hasPrice, type HasPrice } from "./hasPrice"
  */
 export type Part = Document & HasType & HasModel & HasPrice
 
-export const makePart = (properties: Readonly<Record<string, unknown>>): Part =>
-  pipe(makeDocument(properties), hasType, hasModel, hasPrice)
+export const makePart = (properties: DocumentProperties): Part =>
+  pipe(
+    makeDocument(properties), 
+    hasType, 
+    hasModel, 
+    hasPrice
+  )

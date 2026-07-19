@@ -1,5 +1,5 @@
 import { Option, Stream, pipe } from "effect"
-import type { Document } from "./document"
+import type { ChildConstructor, Document, DocumentProperties } from "./document"
 
 /**
  * Creates the default immutable implementation of `Document`.
@@ -8,7 +8,7 @@ import type { Document } from "./document"
  * new document with the modified property set while leaving the original
  * document unchanged.
  */
-export const makeDocument = (properties: Readonly<Record<string, unknown>>): Document => {
+export const makeDocument = (properties: DocumentProperties): Document => {
   if (properties == null) {
     throw new Error("properties map is required")
   }
@@ -24,10 +24,7 @@ export const makeDocument = (properties: Readonly<Record<string, unknown>>): Doc
    * property exists. `Stream.fromIterable` lazily emits each child, while
    * `Stream.map` constructs the requested document type.
    */
-  const children = <T>(
-    key: string,
-    constructor: (properties: Record<string, unknown>) => T
-  ): Stream.Stream<T> =>
+  const children = <T>(key: string, constructor: ChildConstructor<T>): Stream.Stream<T> =>
     pipe(
       get(key),
       Option.match({
@@ -51,7 +48,7 @@ export const makeDocument = (properties: Readonly<Record<string, unknown>>): Doc
   }
 }
 
-const toDebugString = (properties: Readonly<Record<string, unknown>>): string => {
+const toDebugString = (properties: DocumentProperties): string => {
   const entries = Object.entries(properties)
     .map(([key, value]) => `[${key} : ${value}]`)
     .join(", ")
