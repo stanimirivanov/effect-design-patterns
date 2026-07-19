@@ -4,8 +4,11 @@
   "description": "TypeScript/Effect design patterns",
   "type": "module",
   "private": true,
+  "workspaces": [
+    "abstract-document"
+  ],
   "scripts": {
-    "typecheck": "tsc --noEmit",
+    "typecheck": "bun --filter '*' typecheck",
     "lint": "eslint . --cache --concurrency auto",
     "lint:fix": "eslint . --cache --concurrency auto --fix",
     "prepare": "husky install"
