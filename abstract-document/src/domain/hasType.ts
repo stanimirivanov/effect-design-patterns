@@ -1,6 +1,6 @@
-import { Option, Schema, pipe } from "effect"
-import type { Document } from "@abstractdocument/document"
-import { Property } from "./property"
+import { Option, Schema, pipe } from 'effect';
+import type { Document } from '@abstractdocument/document';
+import { Property } from './property';
 
 /**
  * Adds typed access to the `TYPE` property.
@@ -15,14 +15,10 @@ import { Property } from "./property"
  * throwing an exception.
  */
 export interface HasType {
-  readonly getType: () => Option.Option<string>
+  readonly getType: () => Option.Option<string>;
 }
 
 export const hasType = <T extends Document>(document: T): T & HasType => ({
   ...document,
-  getType: () => 
-    pipe(
-      document.get(Property.TYPE), 
-      Option.flatMap(Schema.decodeUnknownOption(Schema.String))
-    )
-})
+  getType: () => pipe(document.get(Property.TYPE), Option.flatMap(Schema.decodeUnknownOption(Schema.String))),
+});

@@ -1,12 +1,8 @@
 {
   "compilerOptions": {
     "paths": {
-      "@abstractdocument/*": [
-        "./src/abstractdocument/*"
-      ],
-      "@domain/*": [
-        "./src/domain/*"
-      ]
+      "@abstractdocument/*": ["./src/abstractdocument/*"],
+      "@domain/*": ["./src/domain/*"]
     },
     // Environment setup & latest features
     "lib": ["ESNext"],

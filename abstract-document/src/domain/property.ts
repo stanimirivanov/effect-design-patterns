@@ -5,10 +5,10 @@
  * runtime overhead of TypeScript enums.
  */
 export const Property = {
-  TYPE: "TYPE",
-  PRICE: "PRICE",
-  MODEL: "MODEL",
-  PARTS: "PARTS"
-} as const
+  TYPE: 'TYPE',
+  PRICE: 'PRICE',
+  MODEL: 'MODEL',
+  PARTS: 'PARTS',
+} as const;
 
-export type Property = (typeof Property)[keyof typeof Property]
+export type Property = (typeof Property)[keyof typeof Property];
