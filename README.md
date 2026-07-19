@@ -1,13 +1,15 @@
 # Effect Design Patterns
 
-A collection of classic software design patterns implemented in **TypeScript** using the **Effect** library.
+A collection of classic software design patterns implemented in [TypeScript](https://www.typescriptlang.org/) using the
+[Effect](https://effect.website/) library.
 
 The purpose of this repository is not only to demonstrate the design patterns themselves, but also to explore how they
 can be expressed using Effect's functional programming model. Each pattern serves as a practical example of applying
 Effect's abstractions in realistic code, providing a hands-on way to learn the library beyond isolated examples.
 
-Rather than translating Java implementations line by line, each pattern aims to preserve the original intent while
-adopting idiomatic TypeScript and Effect practices where appropriate.
+Rather than translating [Java Design Patterns](https://java-design-patterns.com/patterns/) implementations line by line,
+each pattern aims to preserve the original intent while adopting idiomatic TypeScript and Effect practices where
+appropriate.
 
 ## Goals
 
@@ -25,7 +27,7 @@ Each design pattern lives in its own independent project.
 
 ```text
 .
-├── abstract-document/
+├── pattern-name/
 │   ├── README.md
 │   ├── package.json
 │   ├── tsconfig.json
@@ -84,7 +86,7 @@ behaviour.
 Navigate to a pattern directory:
 
 ```bash
-cd abstract-document
+cd pattern-name
 ```
 
 Install dependencies:
@@ -96,7 +98,7 @@ bun install
 Run the example:
 
 ```bash
-bun run src/main.ts
+bun start
 ```
 
 Run the tests:
