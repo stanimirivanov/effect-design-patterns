@@ -1,150 +1,212 @@
----
-title: "Abstract Document Pattern in TypeScript: Simplifying Data Handling with Flexibility"
-shortTitle: Abstract Document
-category: Structural
-language: en
-tag:
-  - Abstraction
-  - Decoupling
-  - Dynamic typing
-  - Encapsulation
-  - Extensibility
-  - Immutability
----
+# Abstract Document Pattern
 
-> Ported from the [Java original](https://github.com/iluwatar/java-design-patterns/tree/master/abstract-document) to
-> TypeScript/[Effect](https://effect.website).
-> See [differences from the Java version](#java--typescripteffect-differences) below for what changed and why.
+This project demonstrates the **Abstract Document** design pattern implemented with **TypeScript** and the **Effect**
+library.
 
-## Intent of Abstract Document Design Pattern
+The implementation follows the original Java Design Patterns example while adopting idiomatic TypeScript and functional
+programming techniques. Rather than using inheritance and mutable objects, the implementation composes immutable
+documents with reusable traits and Effect's functional abstractions.
 
-Provide a consistent way to handle hierarchical, loosely-typed data by separating a document's core storage from the
-typed "views" used to read it - so new properties can be added dynamically without a rigid, upfront class structure.
+The goal of this project is twofold:
 
-## Explanation
+- demonstrate the Abstract Document pattern in TypeScript;
+- showcase practical usage of Effect's `Option`, `Stream`, `Schema`, `pipe`, and `Effect` APIs.
 
-Real-world example
+For a complete explanation of the pattern itself, including its motivation, structure and UML diagrams, refer to the
+original implementation.
 
-> A library system stores physical books, ebooks, and audiobooks in one place. Each format shares some attributes
-> (title, author) and has unique ones (page count, file size, duration). Abstract Document lets the system store and read
-> any of these without a rigid per-format class hierarchy.
+## About the Pattern
 
-In plain words
+The Abstract Document pattern allows objects to expose strongly typed APIs while storing their data in a flexible
+property map. New properties can be introduced without modifying existing types, making the model highly extensible.
 
-> Abstract Document lets you attach properties to an object, and read them back through typed accessors, without the
-> object's class needing to know about those properties in advance.
+This repository focuses on the TypeScript and Effect implementation of the pattern. For a detailed description of the
+pattern itself,
+see: [Abstract Document Pattern in Java: Simplifying Data Handling with Flexibility](https://java-design-patterns.com/patterns/abstract-document/)
 
-## Programmatic Example
+## Project Structure
 
-Consider a car built from parts. We don't know in advance which properties a given car or part will have - the whole
-point is not needing to.
-
-`Document` holds an immutable property bag and exposes `get`, `put`, and `children`:
-
-```typescript
-export interface Document {
-    readonly properties: DocumentProperties
-    readonly get: (key: string) => Option.Option<unknown>
-    readonly put: (key: string, value: unknown) => Document
-    readonly children: <T>(
-        key: string,
-        constructor: ChildConstructor<T>
-    ) => Stream.Stream<T>
-}
+```text
+src/
+├── abstractdocument/
+│   ├── document.ts
+│   ├── document-impl.ts
+│   └── index.ts
+│
+├── domain/
+│   ├── car.ts
+│   ├── part.ts
+│   ├── property.ts
+│   ├── has-model.ts
+│   ├── has-parts.ts
+│   ├── has-price.ts
+│   ├── has-type.ts
+│   └── index.ts
+│
+├── index.ts
+├── program.ts
+└── main.ts
 ```
 
-Traits are functions that take a `Document` and return it with one more typed accessor attached, composed with `pipe`
-instead of `implements`:
+The project is intentionally divided into two logical parts:
 
-```typescript
-export const hasModel = <T extends Document>(document: T): T & HasModel => ({
-    ...document,
-    getModel: () =>
-        pipe(document.get(Property.MODEL), Option.flatMap(Schema.decodeUnknownOption(Schema.String)))
+- **abstractdocument** contains the generic implementation of the Abstract Document pattern.
+- **domain** contains the example domain model built on top of the pattern.
+
+`program.ts` and `main.ts` demonstrates how the pattern can be used to construct and traverse documents.
+
+## Running the Example
+
+Install dependencies:
+
+```bash
+bun install
+```
+
+Execute the example:
+
+```bash
+bun start
+```
+
+Run the test suite:
+
+```bash
+bun test
+```
+
+The example constructs a car document containing several child part documents and demonstrates how traits provide
+strongly typed access to document properties.
+
+### Option
+
+A document stores values as `unknown`, and a property may or may not exist.
+
+Instead of returning `null` or `undefined`, document access returns an `Option<T>`.
+
+```ts
+const model = car.getModel()
+```
+
+An `Option` has two possible values:
+
+- `Option.some(value)` — the value exists.
+- `Option.none()` — the value is absent.
+
+Operations such as `Option.map()` and `Option.flatMap()` transform values only when they are present, eliminating
+explicit null checks while making missing values part of the type system.
+
+### Schema
+
+Document properties are stored as untyped runtime values.
+
+Effect's `Schema` module validates and decodes these values into strongly typed objects.
+
+```ts
+Schema.decodeUnknownOption(Schema.String)
+```
+
+attempts to decode an unknown value as a string.
+
+If decoding succeeds, the result is `Option.some(value)`. If the value has an unexpected type, the result is
+`Option.none()`.
+
+This approach avoids unsafe casts while keeping the implementation concise and type-safe.
+
+### Stream
+
+Child documents are exposed as an Effect `Stream`.
+
+```ts
+car.getParts()
+```
+
+A `Stream` represents a lazily evaluated sequence of values.
+
+Unlike an array, values are produced only when the stream is consumed. Although this example processes an in-memory
+collection, the same API also supports asynchronous, infinite and resource-backed streams, making the implementation
+easily extensible without changing the public API.
+
+### pipe
+
+Effect encourages composing operations using `pipe`.
+
+Instead of nesting function calls
+
+```ts
+f(g(h(x)))
+```
+
+the same transformation can be written as
+
+```ts
+pipe(
+    x,
+    h,
+    g,
+    f
+)
+```
+
+Each transformation receives the result of the previous one, producing code that reads naturally from top to bottom and
+scales well as processing pipelines become more complex.
+
+### Effect
+
+The example application itself is represented as an `Effect`.
+
+```ts
+const program = Effect.gen(function* () {
+...
 })
 ```
 
-`Car` and `Part` are built by piping a base `Document` through the traits they need:
+`Effect.gen()` uses generator syntax to sequence computations that may perform logging, asynchronous work or other
+effects.
 
-```typescript
-export const makeCar = (properties: DocumentProperties): Car =>
-    pipe(make(properties), hasModel, hasPrice, hasParts)
+Individual operations are executed using `yield*`, producing code that resembles synchronous imperative programming
+while remaining purely functional and composable.
 
-export const makePart = (properties: DocumentProperties): Part =>
-    pipe(make(properties), hasType, hasModel, hasPrice)
+The application is started using
+
+```ts
+Effect.runPromise(program)
 ```
 
-And constructing/using a car:
+which executes the Effect and returns a standard JavaScript `Promise`.
 
-```typescript
-const car = makeCar({
-    [Property.MODEL]: "300SL",
-    [Property.PRICE]: 10000,
-    [Property.PARTS]: [
-        {[Property.TYPE]: "wheel", [Property.MODEL]: "15C", [Property.PRICE]: 100},
-        {[Property.TYPE]: "door", [Property.MODEL]: "Lambo", [Property.PRICE]: 300}
-    ]
-})
+## Why Effect?
 
-Option.getOrThrow(car.getModel()) // "300SL"
-Option.getOrThrow(car.getPrice()) // 10000
+Although the Abstract Document pattern does not require Effect, the library provides a consistent set of abstractions
+that fit naturally with the pattern.
+
+Using Effect throughout the implementation provides several benefits:
+
+- **Explicit handling of optional values** using `Option`.
+- **Safe runtime validation** using `Schema`.
+- **Lazy traversal of child documents** using `Stream`.
+- **Composable data transformations** using `pipe`.
+- **Structured effectful programs** using `Effect`.
+
+Using the same library for all of these concerns results in a uniform programming model, where the same composition
+techniques are used throughout the application.
+
+## Example Output
+
+Running the example produces output similar to the following:
+
+```text
+Constructing parts and car
+
+Here is our car:
+-> model: 300SL
+-> price: 10000
+-> parts:
+   wheel / 15C / 100
+   door / Lambo / 300
 ```
 
-Running it (`bun run abstract-document/src/main.ts` from the repo root, or `bun run start` from inside this folder)
-produces:
+## Learn More
 
-```
-timestamp=... level=INFO fiber=#0 message="Constructing parts and car"
-timestamp=... level=INFO fiber=#0 message="Here is our car:"
-timestamp=... level=INFO fiber=#0 message="-> model: 300SL"
-timestamp=... level=INFO fiber=#0 message="-> price: 10000"
-timestamp=... level=INFO fiber=#0 message="-> parts: "
-timestamp=... level=INFO fiber=#1 message="	wheel/15C/100"
-timestamp=... level=INFO fiber=#1 message="	door/Lambo/300"
-```
-
-Same information as the Java original's Logback output, different format - see the differences section.
-
-## When to Use the Abstract Document Pattern
-
-* Documents have diverse, evolving attribute structures known only at runtime (CMS content types, file systems, product
-  catalogs, config elements).
-* You want typed access to specific properties without forcing every document into one rigid shape.
-* Decoupling storage from the specific set of fields in use is more valuable than compile-time-checked object shapes.
-
-## Benefits and Trade-offs
-
-Benefits:
-
-* **Flexibility** - accommodates varied document structures and properties.
-* **Extensibility** - add new attributes without changing existing code.
-* **Maintainability** - storage and typed access are separate concerns.
-* **Reusability** - trait functions are reused across any Document-shaped value.
-
-Trade-offs:
-
-* **Indirection** - reading a property goes through `Option`/`Schema` decoding rather than a direct field access.
-* **Runtime cost** - each `put` allocates a new object (structural sharing helps, but it's not free); each trait's
-  decode has a small runtime cost the Java casts don't pay (until the cast is wrong).
-
-## Java → TypeScript/Effect Differences
-
-| Aspect                             | Java original                                                                                       | This port                                                                                                     | Notes                                                                                                                                                                                                            |
-|------------------------------------|-----------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Nullable/optional values           | `Optional<T>` used only in trait getters; base `get()` returns raw nullable `Object`                | `Option<T>` used everywhere, including the base `Document.get`                                                | Behavior-adjacent: absence is `Option` from the ground up, not just at the typed boundary                                                                                                                        |
-| Lazy child sequences               | `java.util.stream.Stream<T>`                                                                        | `effect/Stream`                                                                                               | Same role; Effect's `Stream` is a superset (async, backpressure, resource-safety) but only the synchronous subset is used here                                                                                   |
-| Interface default methods (traits) | `interface HasModel extends Document { default ... }`, picked up via `implements`                   | Standalone functions (`hasModel(doc)`) composed with `pipe`                                                   | TS interfaces can't carry implementations; `pipe`-composition is the FP equivalent of stacking default methods                                                                                                   |
-| **`put` mutation**                 | **Mutates the shared property map in place; returns `Void`**                                        | **Returns a new `Document`; original is untouched**                                                           | **Behavior change, not just syntax** - flagged explicitly; see `shouldUpdateExistingValue` in the tests for a test that asserts the original stays unchanged                                                     |
-| Typed property access              | Unchecked cast: `(String) get(key)` - throws `ClassCastException` only if actually wrong at runtime | `Schema.decodeUnknownOption(Schema.String)` - returns `None` for a mismatched type instead of throwing        | Strictly safer than the Java version, not just a stylistic swap                                                                                                                                                  |
-| Enum                               | `enum Property { PARTS, TYPE, PRICE, MODEL }`                                                       | `const object` + derived union type                                                                           | TS `enum` carries runtime overhead most style guides avoid; this is the standard replacement                                                                                                                     |
-| Constructor null-check             | `Objects.requireNonNull(properties)` throws `NullPointerException`                                  | Same runtime check, throws `Error`                                                                            | Kept as a plain synchronous throw rather than an `Effect` failure - the precondition doesn't warrant the ceremony of the error channel                                                                           |
-| `main`/logging                     | Imperative `main`, SLF4J/Logback (`07:21:57.391 [main] INFO ...`)                                   | `Effect.gen` + `Effect.logInfo`, run via `Effect.runPromise` (`timestamp=... level=INFO fiber=#0 ...`)        | Same information, different log line format - Effect's structured logger vs. Logback's pattern layout                                                                                                            |
-| Build/test                         | Maven module, own `pom.xml` `<dependencies>`, JUnit 5                                               | Bun workspace package, own `package.json`/`tsconfig.json`, `bun:test`                                         | This folder is a self-contained Bun project - `cd abstract-document && bun install && bun test` works with nothing else present, same as this module's `pom.xml` would build standalone within the Maven reactor |
-| `toString()`                       | `Object#toString()` override, includes fully-qualified class name                                   | `toString()` as an own property on the returned object (JS still calls it for string coercion), no class name | There's no class here to name; the property list is still there                                                                                                                                                  |
-
-## References
-
-* [Design Patterns: Elements of Reusable Object-Oriented Software](https://amzn.to/3w0pvKI)
-* [Abstract Document Pattern (Wikipedia)](https://en.wikipedia.org/wiki/Abstract_Document_Pattern)
-* [Dealing with Properties (Martin Fowler)](http://martinfowler.com/apsupp/properties.pdf)
-* [Effect documentation](https://effect.website/docs)
+- Effect documentation: https://effect.website/
+- Original Java Design Patterns implementation: https://java-design-patterns.com/patterns/abstract-document/
