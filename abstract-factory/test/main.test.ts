@@ -1,6 +1,6 @@
 import { describe, test } from 'bun:test';
 import { Effect } from 'effect';
-import { program } from '../src/main';
+import { program } from '../src/program';
 
 describe('main', () => {
   test('shouldExecuteApplicationWithoutException', async () => {
