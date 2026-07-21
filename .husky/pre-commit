@@ -2,4 +2,4 @@
 
 export PATH="$PATH:$USERPROFILE/.bun/bin"
 
-bun typecheck && bun lint
+bun typecheck && bun lint-staged

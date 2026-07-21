@@ -15,5 +15,9 @@ export interface HasPrice {
 
 export const hasPrice = <T extends Document>(document: T): T & HasPrice => ({
   ...document,
-  getPrice: () => pipe(document.get(Property.PRICE), Option.flatMap(Schema.decodeUnknownOption(Schema.Number))),
+  getPrice: () =>
+    pipe(
+      document.get(Property.PRICE),
+      Option.flatMap(Schema.decodeUnknownOption(Schema.Number))
+    ),
 });

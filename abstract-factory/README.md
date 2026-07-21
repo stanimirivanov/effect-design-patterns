@@ -1,24 +1,40 @@
+---
+title: "Abstract Factory Pattern in TypeScript with Effect"
+shortTitle: Abstract Factory
+category: Creational
+language: en
+tag:
+  - Abstraction
+  - Dependency Injection
+  - Effect
+  - Gang of Four
+  - Layer
+  - Context
+---
+
 # Abstract Factory Pattern
 
-This project demonstrates the **Abstract Factory** design pattern implemented with **TypeScript** and the **Effect**
+This project demonstrates the **Abstract Factory** design pattern implemented
+with **TypeScript** and the **Effect**
 library.
 
-The implementation follows the original Java Design Patterns example while adopting idiomatic TypeScript and Effect
-constructs. Rather than creating concrete factory classes, the implementation uses Effect's dependency injection system
-(`Context.Tag` and `Layer`) to model families of related services.
+The implementation follows the original Java Design Patterns example while
+adopting idiomatic TypeScript and Effect constructs. Rather than creating
+concrete factory classes, the implementation uses Effect's dependency injection
+system (`Context.Tag` and `Layer`) to model families of related services.
 
 The goal of this project is twofold:
 
 - demonstrate the Abstract Factory pattern in TypeScript;
 - showcase practical usage of Effect's dependency injection APIs.
 
-For a complete explanation of the pattern itself, including its motivation, structure and UML diagrams, refer to the
-original implementation.
+For a complete explanation of the pattern itself, including its motivation,
+structure and UML diagrams, refer to the original implementation.
 
 ## About the Pattern
 
-The Abstract Factory pattern creates families of related objects without exposing their concrete implementations to
-client code.
+The Abstract Factory pattern creates families of related objects without
+exposing their concrete implementations to client code.
 
 In this example, a kingdom consists of three related products:
 
@@ -31,9 +47,11 @@ Two compatible product families are provided:
 - Elf
 - Orc
 
-The application depends only on the abstract services, while the concrete family is selected in one place.
+The application depends only on the abstract services, while the concrete family
+is selected in one place.
 
-For a detailed explanation of the pattern itself, see the original Java Design Patterns project:
+For a detailed explanation of the pattern itself, see the original Java Design
+Patterns project:
 
 https://java-design-patterns.com/patterns/abstract-factory/
 
@@ -65,8 +83,8 @@ The project is intentionally divided into two logical parts:
 - **abstractfactory** contains the factory selection logic used by the example.
 - **kingdom** contains the abstract products and the concrete product families.
 
-`program.ts` demonstrates how the Abstract Factory pattern is implemented using Effect, while `main.ts` provides the
-executable entry point.
+`program.ts` demonstrates how the Abstract Factory pattern is implemented using
+Effect, while `main.ts` provides the executable entry point.
 
 ## Running the Example
 
@@ -88,15 +106,16 @@ Run the test suite:
 bun test
 ```
 
-The program constructs both an elf kingdom and an orc kingdom using different factory layers while executing exactly the
-same application logic.
+The program constructs both an elf kingdom and an orc kingdom using different
+factory layers while executing exactly the same application logic.
 
 ## The Effect Implementation
 
-The Abstract Factory pattern maps naturally onto Effect's dependency injection model.
+The Abstract Factory pattern maps naturally onto Effect's dependency injection
+model.
 
-Instead of creating factory classes, the implementation models factories as `Layer`s that construct complete families of
-services.
+Instead of creating factory classes, the implementation models factories as
+`Layer`s that construct complete families of services.
 
 Each Effect abstraction has a specific responsibility.
 
@@ -117,13 +136,15 @@ A `Context.Tag` serves two purposes:
 - it defines the type of service required by an Effect;
 - it acts as the runtime identifier used to retrieve that service.
 
-Inside an `Effect.gen` block, a service is requested simply by yielding the corresponding tag.
+Inside an `Effect.gen` block, a service is requested simply by yielding the
+corresponding tag.
 
 ```ts
 const castle = yield * Castle
 ```
 
-The program depends only on the abstract service and remains independent of the concrete implementation.
+The program depends only on the abstract service and remains independent of the
+concrete implementation.
 
 ### Layer
 
@@ -138,10 +159,11 @@ export const ElfKingdomFactory =
 
 Each layer provides a complete family of related services.
 
-`Layer.mergeAll()` combines several service implementations into one factory layer, ensuring that all required services
-are provided together.
+`Layer.mergeAll()` combines several service implementations into one factory
+layer, ensuring that all required services are provided together.
 
-The application chooses between different product families by selecting a different layer.
+The application chooses between different product families by selecting a
+different layer.
 
 ### Effect.provide
 
@@ -151,10 +173,11 @@ The application chooses between different product families by selecting a differ
 Effect.provide(program, ElfKingdomFactory)
 ```
 
-This satisfies the program's service requirements without modifying the application itself.
+This satisfies the program's service requirements without modifying the
+application itself.
 
-The same program can therefore execute with completely different implementations simply by providing a different factory
-layer.
+The same program can therefore execute with completely different implementations
+simply by providing a different factory layer.
 
 ### Effect.gen
 
@@ -166,15 +189,16 @@ const program = Effect.gen(function* () {
 })
 ```
 
-`Effect.gen()` uses generator syntax to sequence computations while keeping the code readable and composable.
+`Effect.gen()` uses generator syntax to sequence computations while keeping the
+code readable and composable.
 
-Services are retrieved using `yield*`, making dependency access explicit while avoiding manual dependency passing
-throughout the application.
+Services are retrieved using `yield*`, making dependency access explicit while
+avoiding manual dependency passing throughout the application.
 
 ## Why Effect?
 
-Although the Abstract Factory pattern can be implemented using traditional factory classes, Effect provides a more
-general dependency injection model.
+Although the Abstract Factory pattern can be implemented using traditional
+factory classes, Effect provides a more general dependency injection model.
 
 Using Effect throughout the implementation provides several benefits:
 
@@ -184,8 +208,8 @@ Using Effect throughout the implementation provides several benefits:
 - the compiler verifies that every required dependency has been provided;
 - test implementations are created by providing alternative layers.
 
-Rather than being specific to the Abstract Factory pattern, the same abstractions are used consistently throughout
-Effect applications.
+Rather than being specific to the Abstract Factory pattern, the same
+abstractions are used consistently throughout Effect applications.
 
 ## Example Output
 
@@ -206,4 +230,5 @@ This is the orc king!
 ## Learn More
 
 - Effect documentation: https://effect.website/
-- Original Java Design Patterns implementation: https://java-design-patterns.com/patterns/abstract-factory/
+- Original Java Design Patterns
+  implementation: https://java-design-patterns.com/patterns/abstract-factory/

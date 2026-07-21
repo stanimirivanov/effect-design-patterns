@@ -33,7 +33,9 @@ describe('Document', () => {
   });
 
   test('should throw when constructed with null properties', () => {
-    expect(() => makeDocument(null as unknown as Record<string, unknown>)).toThrow();
+    expect(() =>
+      makeDocument(null as unknown as Record<string, unknown>)
+    ).toThrow();
   });
 
   test('should put and get nested document', () => {

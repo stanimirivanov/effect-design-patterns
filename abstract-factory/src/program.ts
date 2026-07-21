@@ -2,12 +2,18 @@ import { Effect } from 'effect';
 import { Castle } from '@kingdom/castle';
 import { King } from '@kingdom/king';
 import { Army } from '@kingdom/army';
-import { type Kingdom, KingdomType, makeFactory } from '@abstractfactory/factory-maker';
+import {
+  type Kingdom,
+  KingdomType,
+  makeFactory,
+} from '@abstractfactory/factory-maker';
 
 /**
- * Logs the descriptions of all services belonging to the currently selected kingdom.
+ * Logs the descriptions of all services belonging to the currently selected
+ * kingdom.
  *
- * The Effect requires the `Castle`, `King` and `Army` services to be present in the Context.
+ * The Effect requires the `Castle`, `King` and `Army` services to be present in
+ * the Context.
  */
 const describeKingdom = Effect.gen(function* () {
   const army = yield* Army;
@@ -21,18 +27,22 @@ const describeKingdom = Effect.gen(function* () {
 /**
  * Executes the demonstration using the selected kingdom factory.
  *
- * Providing the factory layer satisfies the application's service dependencies without changing the program itself.
+ * Providing the factory layer satisfies the application's service dependencies
+ * without changing the program itself.
  */
-export const createKingdom = (type: Kingdom) => Effect.provide(describeKingdom, makeFactory(type));
+export const createKingdom = (type: Kingdom) =>
+  Effect.provide(describeKingdom, makeFactory(type));
 
 /**
  * Example application demonstrating the Abstract Factory pattern.
  *
- * The program depends only on abstract kingdom services. A concrete kingdom implementation is selected by providing the
- * corresponding factory layer, allowing the same application logic to run with different product families.
+ * The program depends only on abstract kingdom services. A concrete kingdom
+ * implementation is selected by providing the corresponding factory layer,
+ * allowing the same application logic to run with different product families.
  *
- * `Effect.gen` sequences Effect operations using generator syntax, resulting in code that reads similarly to  
- * synchronous imperative code while remaining purely functional.
+ * `Effect.gen` sequences Effect operations using generator syntax, resulting in
+ * code that reads similarly to synchronous imperative code while remaining
+ * purely functional.
  */
 export const program = Effect.gen(function* () {
   yield* Effect.logInfo('elf kingdom');

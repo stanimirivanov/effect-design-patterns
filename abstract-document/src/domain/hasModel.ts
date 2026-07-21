@@ -15,5 +15,9 @@ export interface HasModel {
 
 export const hasModel = <T extends Document>(document: T): T & HasModel => ({
   ...document,
-  getModel: () => pipe(document.get(Property.MODEL), Option.flatMap(Schema.decodeUnknownOption(Schema.String))),
+  getModel: () =>
+    pipe(
+      document.get(Property.MODEL),
+      Option.flatMap(Schema.decodeUnknownOption(Schema.String))
+    ),
 });

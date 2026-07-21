@@ -6,7 +6,8 @@
   "private": true,
   "workspaces": [
     "abstract-document",
-    "abstract-factory"
+    "abstract-factory",
+    "active-object"
   ],
   "scripts": {
     "typecheck": "bun --filter '*' typecheck",
@@ -14,18 +15,23 @@
     "lint:fix": "eslint . --cache --concurrency auto --fix",
     "prepare": "husky install"
   },
+  "lint-staged": {
+    "*.{ts,js,json}": [
+      "bunx prettier --write",
+      "bunx eslint --fix"
+    ]
+  },
   "dependencies": {
     "effect": "^3.22.0"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
     "@types/bun": "^1.3.14",
-    "@typescript-eslint/eslint-plugin": "^8.60.0",
-    "@typescript-eslint/parser": "^8.60.0",
     "eslint": "^10.7.0",
-    "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^3.8.3",
+    "eslint-plugin-import-x": "^4.6.1",
     "eslint-plugin-prettier": "^5.5.5",
     "husky": "^9.0.11",
+    "lint-staged": "^17.1.0",
     "prettier": "^3.9.5",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.64.0"

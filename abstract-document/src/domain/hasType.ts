@@ -20,5 +20,9 @@ export interface HasType {
 
 export const hasType = <T extends Document>(document: T): T & HasType => ({
   ...document,
-  getType: () => pipe(document.get(Property.TYPE), Option.flatMap(Schema.decodeUnknownOption(Schema.String))),
+  getType: () =>
+    pipe(
+      document.get(Property.TYPE),
+      Option.flatMap(Schema.decodeUnknownOption(Schema.String))
+    ),
 });

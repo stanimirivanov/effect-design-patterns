@@ -5,9 +5,7 @@
   "eslint.workingDirectories": [{ "pattern": "./*/" }],
   "prettier.configPath": "",
   "prettier.ignorePath": ".gitignore",
-
-  "editor.rulers": [120],
-
+  "editor.rulers": [80],
   "workbench.tree.indent": 16,
   "explorer.compactFolders": false
 }

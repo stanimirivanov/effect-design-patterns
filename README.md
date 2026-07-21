@@ -1,25 +1,32 @@
 # Effect Design Patterns
 
-A collection of classic software design patterns implemented in [TypeScript](https://www.typescriptlang.org/) using the
+A collection of classic software design patterns implemented
+in [TypeScript](https://www.typescriptlang.org/) using the
 [Effect](https://effect.website/) library.
 
-The purpose of this repository is not only to demonstrate the design patterns themselves, but also to explore how they
-can be expressed using Effect's functional programming model. Each pattern serves as a practical example of applying
-Effect's abstractions in realistic code, providing a hands-on way to learn the library beyond isolated examples.
+The purpose of this repository is not only to demonstrate the design patterns
+themselves, but also to explore how they can be expressed using Effect's
+functional programming model. Each pattern serves as a practical example of
+applying Effect's abstractions in realistic code, providing a hands-on way to
+learn the library beyond isolated examples.
 
-Rather than translating [Java Design Patterns](https://java-design-patterns.com/patterns/) implementations line by line,
-each pattern aims to preserve the original intent while adopting idiomatic TypeScript and Effect practices where
-appropriate.
+Rather than
+translating [Java Design Patterns](https://java-design-patterns.com/patterns/)
+implementations line by line, each pattern aims to preserve the original intent
+while adopting idiomatic TypeScript and Effect practices where appropriate.
 
 ## Goals
 
 This repository has three primary goals:
 
 * Learn the Effect library by implementing well-known design patterns.
-* Explore how functional programming concepts influence traditional object-oriented patterns.
-* Provide small, self-contained examples that demonstrate practical usage of Effect's APIs.
+* Explore how functional programming concepts influence traditional
+  object-oriented patterns.
+* Provide small, self-contained examples that demonstrate practical usage of
+  Effect's APIs.
 
-Each implementation focuses on clarity and education rather than production-ready frameworks or exhaustive feature sets.
+Each implementation focuses on clarity and education rather than
+production-ready frameworks or exhaustive feature sets.
 
 ## Repository Structure
 
@@ -45,11 +52,13 @@ Every pattern contains its own:
 * documentation
 * package configuration
 
-This allows each project to evolve independently while sharing common tooling from the repository root.
+This allows each project to evolve independently while sharing common tooling
+from the repository root.
 
 ## Learning Effect Through Design Patterns
 
-Each implementation demonstrates one or more Effect abstractions in a practical context.
+Each implementation demonstrates one or more Effect abstractions in a practical
+context.
 
 Examples include:
 
@@ -59,8 +68,8 @@ Examples include:
 * **Effect** for describing effectful computations.
 * **pipe** for readable functional composition.
 
-Rather than introducing these APIs in isolation, the repository demonstrates how they naturally fit into familiar
-software design patterns.
+Rather than introducing these APIs in isolation, the repository demonstrates how
+they naturally fit into familiar software design patterns.
 
 ## Project Layout
 
@@ -78,8 +87,8 @@ test/
 └── integration tests
 ```
 
-Each project includes an executable example that demonstrates the pattern in action together with tests verifying its
-behaviour.
+Each project includes an executable example that demonstrates the pattern in
+action together with tests verifying its behaviour.
 
 ## Running a Pattern
 
@@ -107,15 +116,17 @@ Run the tests:
 bun test
 ```
 
-See the individual project's README for implementation details and a discussion of the Effect constructs used by that
-pattern.
+See the individual project's README for implementation details and a discussion
+of the Effect constructs used by that pattern.
 
 ## Why This Repository?
 
-Many Design Pattern collections demonstrate patterns using traditional object-oriented techniques. This repository
-explores a different perspective by combining those same patterns with modern TypeScript and Effect.
+Many Design Pattern collections demonstrate patterns using traditional
+object-oriented techniques. This repository explores a different perspective by
+combining those same patterns with modern TypeScript and Effect.
 
-The result is an opportunity to compare different implementation styles while learning:
+The result is an opportunity to compare different implementation styles while
+learning:
 
 * immutable data structures
 * functional composition
@@ -124,5 +135,5 @@ The result is an opportunity to compare different implementation styles while le
 * lazy evaluation
 * effectful programming
 
-The repository is intended as a learning resource for developers who are interested in both software design patterns and
-the Effect ecosystem.
+The repository is intended as a learning resource for developers who are
+interested in both software design patterns and the Effect ecosystem.
