@@ -13,11 +13,13 @@ tag:
 
 # Active Object Pattern
 
-This project demonstrates the **Active Object** design pattern implemented with **TypeScript** and the **Effect**
+This project demonstrates the **Active Object** design pattern implemented with
+**TypeScript** and the **Effect**
 library.
 
-The implementation follows the original Java Design Patterns example while adopting idiomatic TypeScript and Effect
-constructs. Rather than using operating system threads and blocking queues, it models active objects using Effect's
+The implementation follows the original Java Design Patterns example while
+adopting idiomatic TypeScript and Effect constructs. Rather than using operating
+system threads and blocking queues, it models active objects using Effect's
 lightweight concurrency primitives.
 
 The goal of this project is twofold:
@@ -25,15 +27,16 @@ The goal of this project is twofold:
 - demonstrate the Active Object pattern in TypeScript;
 - showcase practical usage of Effect's concurrency model.
 
-For a complete explanation of the pattern itself, including its motivation, structure and UML diagrams, refer to the
-original implementation.
+For a complete explanation of the pattern itself, including its motivation,
+structure and UML diagrams, refer to the original implementation.
 
 ## About the Pattern
 
 The Active Object pattern decouples method invocation from method execution.
 
-Instead of executing work immediately, method calls are converted into requests and placed into a private queue. A
-dedicated worker processes those requests asynchronously, allowing callers to continue immediately while preserving
+Instead of executing work immediately, method calls are converted into requests
+and placed into a private queue. A dedicated worker processes those requests
+asynchronously, allowing callers to continue immediately while preserving
 sequential execution inside the object.
 
 In this example every creature owns:
@@ -42,7 +45,8 @@ In this example every creature owns:
 - a dedicated worker fiber;
 - asynchronous operations such as `eat()` and `roam()`.
 
-For a detailed explanation of the pattern itself, see the original Java Design Patterns project:
+For a detailed explanation of the pattern itself, see the original Java Design
+Patterns project:
 
 https://java-design-patterns.com/patterns/active-object/
 
@@ -91,17 +95,19 @@ Run the test suite:
 bun test
 ```
 
-The program creates several active creatures, submits work to each of them and waits until every submitted request has
-completed before shutting the workers down.
+The program creates several active creatures, submits work to each of them and
+waits until every submitted request has completed before shutting the workers
+down.
 
 ---
 
 # The Effect Implementation
 
-The Active Object pattern maps naturally onto several Effect concurrency primitives.
+The Active Object pattern maps naturally onto several Effect concurrency
+primitives.
 
-Rather than manually managing operating system threads, the implementation expresses the pattern using composable
-Effects.
+Rather than manually managing operating system threads, the implementation
+expresses the pattern using composable Effects.
 
 Each Effect abstraction has a specific responsibility.
 
@@ -117,11 +123,13 @@ Effect.gen(function* () {
 
 An `Effect` describes work that may be executed later.
 
-Unlike a normal function call, creating an `Effect` does not immediately perform the computation. Effects can be
-composed, combined and executed by the Effect runtime.
+Unlike a normal function call, creating an `Effect` does not immediately perform
+the computation. Effects can be composed, combined and executed by the Effect
+runtime.
 
-The implementation uses `Effect.gen()` to express asynchronous workflows using generator syntax. Each `yield*` executes
-another Effect while preserving purely functional composition.
+The implementation uses `Effect.gen()` to express asynchronous workflows using
+generator syntax. Each `yield*` executes another Effect while preserving purely
+functional composition.
 
 ---
 
@@ -134,11 +142,14 @@ const requestQueue =
     yield * Queue.unbounded<Request>()
 ```
 
-The queue stores pending work submitted through methods such as `eat()` and `roam()`.
+The queue stores pending work submitted through methods such as `eat()` and
+`roam()`.
 
-Submitting work simply appends a request to the queue. The caller returns immediately without waiting for execution.
+Submitting work simply appends a request to the queue. The caller returns
+immediately without waiting for execution.
 
-Only the worker fiber removes requests from the queue, ensuring they execute sequentially.
+Only the worker fiber removes requests from the queue, ensuring they execute
+sequentially.
 
 ---
 
@@ -153,8 +164,8 @@ const worker =
 
 A fiber is Effect's lightweight unit of concurrency.
 
-Unlike operating system threads, fibers are managed entirely by the Effect runtime, making them inexpensive to create
-and schedule.
+Unlike operating system threads, fibers are managed entirely by the Effect
+runtime, making them inexpensive to create and schedule.
 
 Each worker repeatedly:
 
@@ -178,7 +189,8 @@ const done =
 
 A `Deferred` represents work that will complete exactly once in the future.
 
-Rather than exposing `Deferred` directly, the implementation wraps it in a `SubmittedTask`.
+Rather than exposing `Deferred` directly, the implementation wraps it in a
+`SubmittedTask`.
 
 ```ts
 interface SubmittedTask {
@@ -186,8 +198,8 @@ interface SubmittedTask {
 }
 ```
 
-This allows callers to optionally wait until a specific request has completed while hiding the synchronization mechanism
-used internally.
+This allows callers to optionally wait until a specific request has completed
+while hiding the synchronization mechanism used internally.
 
 ---
 
@@ -202,12 +214,13 @@ Effect.ensuring(
 )
 ```
 
-`Effect.ensuring()` guarantees that cleanup executes regardless of whether the task succeeds, fails or is interrupted.
+`Effect.ensuring()` guarantees that cleanup executes regardless of whether the
+task succeeds, fails or is interrupted.
 
 Here it ensures that every submitted task eventually signals completion.
 
-The same combinator is also used when shutting down the application, guaranteeing that every worker fiber is interrupted
-even if the program fails.
+The same combinator is also used when shutting down the application,
+guaranteeing that every worker fiber is interrupted even if the program fails.
 
 ---
 
@@ -226,8 +239,8 @@ This implementation represents them using the following Effect abstractions.
 | Worker           | `Fiber`                                 |
 | Future           | `SubmittedTask` (`Deferred` internally) |
 
-This mapping demonstrates how traditional concurrency patterns can be expressed using Effect's functional programming
-model.
+This mapping demonstrates how traditional concurrency patterns can be expressed
+using Effect's functional programming model.
 
 ---
 
@@ -247,7 +260,8 @@ Orc1 has started to roam in the wastelands.
 Orc2 has started to roam in the wastelands.
 ```
 
-Each creature processes its own requests sequentially while different creatures execute concurrently.
+Each creature processes its own requests sequentially while different creatures
+execute concurrently.
 
 ---
 
@@ -255,8 +269,8 @@ Each creature processes its own requests sequentially while different creatures 
 
 The Active Object pattern is fundamentally about concurrency.
 
-Effect provides the primitives needed to express the pattern directly without manually coordinating threads,
-synchronization and cleanup.
+Effect provides the primitives needed to express the pattern directly without
+manually coordinating threads, synchronization and cleanup.
 
 Using Effect throughout the implementation provides several benefits:
 
@@ -265,14 +279,16 @@ Using Effect throughout the implementation provides several benefits:
 - queues guarantee sequential request processing;
 - deterministic synchronization replaces arbitrary delays;
 - cleanup is guaranteed through `Effect.ensuring()`;
-- all concurrency primitives compose naturally with the rest of the Effect ecosystem.
+- all concurrency primitives compose naturally with the rest of the Effect
+  ecosystem.
 
-Rather than being specific to the Active Object pattern, the same abstractions are used consistently throughout Effect
-applications.
+Rather than being specific to the Active Object pattern, the same abstractions
+are used consistently throughout Effect applications.
 
 ---
 
 # Learn More
 
 - Effect documentation: https://effect.website/
-- Original Java Design Patterns implementation: https://java-design-patterns.com/patterns/active-object/
+- Original Java Design Patterns
+  implementation: https://java-design-patterns.com/patterns/active-object/

@@ -1,5 +1,9 @@
 import { Option, Stream, pipe } from 'effect';
-import type { ChildConstructor, Document, DocumentProperties } from './document';
+import type {
+  ChildConstructor,
+  Document,
+  DocumentProperties,
+} from './document';
 
 /**
  * Creates the default immutable implementation of `Document`.
@@ -13,9 +17,11 @@ export const makeDocument = (properties: DocumentProperties): Document => {
     throw new Error('properties map is required');
   }
 
-  const get = (key: string): Option.Option<unknown> => Option.fromNullable(properties[key]);
+  const get = (key: string): Option.Option<unknown> =>
+    Option.fromNullable(properties[key]);
 
-  const put = (key: string, value: unknown): Document => makeDocument({ ...properties, [key]: value });
+  const put = (key: string, value: unknown): Document =>
+    makeDocument({ ...properties, [key]: value });
 
   /**
    * Converts the property value into a lazy `Stream` of child documents.
@@ -24,14 +30,22 @@ export const makeDocument = (properties: DocumentProperties): Document => {
    * property exists. `Stream.fromIterable` lazily emits each child, while
    * `Stream.map` constructs the requested document type.
    */
-  const children = <T>(key: string, constructor: ChildConstructor<T>): Stream.Stream<T> =>
+  const children = <T>(
+    key: string,
+    constructor: ChildConstructor<T>
+  ): Stream.Stream<T> =>
     pipe(
       get(key),
       Option.match({
         onNone: () => Stream.empty,
         onSome: (value) =>
           Array.isArray(value)
-            ? pipe(Stream.fromIterable(value as ReadonlyArray<Record<string, unknown>>), Stream.map(constructor))
+            ? pipe(
+                Stream.fromIterable(
+                  value as ReadonlyArray<Record<string, unknown>>
+                ),
+                Stream.map(constructor)
+              )
             : Stream.empty,
       })
     );

@@ -4,20 +4,20 @@ import { Effect, Queue, Fiber, Deferred } from 'effect';
  * Unit of work submitted to an active creature.
  *
  * Each method invocation is represented as an Effect and placed into the
- * creature's request queue. The worker fiber executes these requests one
- * at a time in submission order.
+ * creature's request queue. The worker fiber executes these requests one at a
+ * time in submission order.
  */
 type Request = Effect.Effect<void>;
 
 /**
  * Handle representing work that has been accepted by an active creature.
  *
- * Calling `eat()` or `roam()` schedules work immediately. The returned
- * handle allows callers to optionally wait until that specific request
- * has been executed by the worker fiber.
+ * Calling `eat()` or `roam()` schedules work immediately. The returned handle
+ * allows callers to optionally wait until that specific request has been
+ * executed by the worker fiber.
  *
- * This preserves the asynchronous behaviour of the Active Object pattern
- * while providing deterministic synchronization when needed.
+ * This preserves the asynchronous behaviour of the Active Object pattern while
+ * providing deterministic synchronization when needed.
  */
 export interface SubmittedTask {
   /**
@@ -29,17 +29,17 @@ export interface SubmittedTask {
 /**
  * Represents an active object.
  *
- * Each active creature owns a private work queue and a dedicated worker
- * fiber processing submitted tasks sequentially.
+ * Each active creature owns a private work queue and a dedicated worker fiber
+ * processing submitted tasks sequentially.
  *
- * Clients interact with the creature by enqueueing work rather than
- * executing it directly. This decouples method invocation from execution,
- * which is the defining characteristic of the Active Object pattern.
+ * Clients interact with the creature by enqueueing work rather than executing
+ * it directly. This decouples method invocation from execution, which is the
+ * defining characteristic of the Active Object pattern.
  *
- * Unlike traditional object-oriented implementations that dedicate a thread
- * to each active object, this implementation uses an Effect fiber. Fibers
- * are lightweight, cooperative execution contexts that allow many active
- * objects to run efficiently without creating operating system threads.
+ * Unlike traditional object-oriented implementations that dedicate a thread to
+ * each active object, this implementation uses an Effect fiber. Fibers are
+ * lightweight, cooperative execution contexts that allow many active objects to
+ * run efficiently without creating operating system threads.
  *
  * The implementation uses:
  *
@@ -50,15 +50,19 @@ export interface SubmittedTask {
 export interface ActiveCreature {
   readonly name: string;
 
-  /** Enqueues eating. Returns a handle you can optionally wait on - see roam(). */
+  /**
+   * Enqueues eating. Returns a `Deferred` that completes once this specific
+   * task has actually run on the worker - not just been accepted into the
+   * queue. Nothing forces you to wait on it: calling `eat()` and discarding the
+   * result is exactly as fire-and-forget. Waiting is opt-in, not automatic.
+   */
   readonly eat: () => Effect.Effect<SubmittedTask>;
 
   /**
-   * Enqueues roaming. Returns a `Deferred` that completes once this
-   * specific task has actually run on the worker - not just been
-   * accepted into the queue. Nothing forces you to wait on it: calling
-   * `roam()` and discarding the result is exactly as fire-and-forget as
-   * Java's `void roam()`. Waiting is opt-in, not automatic.
+   * Enqueues roaming. Returns a `Deferred` that completes once this specific
+   * task has actually run on the worker - not just been accepted into the
+   * queue. Nothing forces you to wait on it: calling `roam()` and discarding
+   * the result is exactly as fire-and-forget. Waiting is opt-in, not automatic.
    */
   readonly roam: () => Effect.Effect<SubmittedTask>;
 
@@ -78,10 +82,12 @@ export interface ActiveCreature {
  * syntax. Each `yield*` executes another Effect while preserving purely
  * functional composition.
  *
- * The resulting Effect allocates the creature's queue, starts the worker
- * fiber and returns an object exposing asynchronous operations.
+ * The resulting Effect allocates the creature's queue, starts the worker fiber
+ * and returns an object exposing asynchronous operations.
  */
-export const makeActiveCreature = (name: string): Effect.Effect<ActiveCreature> =>
+export const makeActiveCreature = (
+  name: string
+): Effect.Effect<ActiveCreature> =>
   Effect.gen(function* () {
     const requestQueue = yield* Queue.unbounded<Request>();
 
@@ -128,7 +134,12 @@ export const makeActiveCreature = (name: string): Effect.Effect<ActiveCreature> 
 
         // `Effect.ensuring` guarantees that the completion signal is emitted
         // regardless of whether the task succeeds, fails or is interrupted.
-        yield* Queue.offer(requestQueue, Effect.ensuring(task, Deferred.succeed(done, undefined)));
+        const wrappedTask = Effect.ensuring(
+          task,
+          Deferred.succeed(done, undefined)
+        );
+
+        yield* Queue.offer(requestQueue, wrappedTask);
 
         const submittedTask: SubmittedTask = {
           wait: Deferred.await(done),
@@ -150,7 +161,9 @@ export const makeActiveCreature = (name: string): Effect.Effect<ActiveCreature> 
      * Work executed by the worker when an roam request reaches the front of
      * the queue.
      */
-    const roamTask = Effect.logInfo(`${name} has started to roam in the wastelands.`);
+    const roamTask = Effect.logInfo(
+      `${name} has started to roam in the wastelands.`
+    );
 
     return {
       name,

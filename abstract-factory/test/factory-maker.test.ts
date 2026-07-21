@@ -1,6 +1,10 @@
 import { describe, test, expect } from 'bun:test';
 import { Context, Effect } from 'effect';
-import { type Kingdom, KingdomType, makeFactory } from '@abstractfactory/factory-maker';
+import {
+  type Kingdom,
+  KingdomType,
+  makeFactory,
+} from '@abstractfactory/factory-maker';
 import { Castle } from '@kingdom/castle';
 import { King } from '@kingdom/king';
 import { Army } from '@kingdom/army';
@@ -25,29 +29,43 @@ const getCastle = get(Castle);
 const getKing = get(King);
 const getArmy = get(Army);
 
-const runWith = <A>(effect: Effect.Effect<A, never, Castle | King | Army>, type: Kingdom) =>
-  Effect.runPromise(Effect.provide(effect, makeFactory(type)));
+const runWith = <A>(
+  effect: Effect.Effect<A, never, Castle | King | Army>,
+  type: Kingdom
+) => Effect.runPromise(Effect.provide(effect, makeFactory(type)));
 
 /**
  * Integration tests for the Abstract Factory example.
  *
- * Each test provides a different kingdom factory layer and verifies that the application receives the correct service
- * implementations.
+ * Each test provides a different kingdom factory layer and verifies that the
+ * application receives the correct service implementations.
  */
 describe('factoryMaker', () => {
   test('verifyKingCreation', async () => {
-    expect((await runWith(getKing, KingdomType.ELF)).describe()).toBe(ELF_KING_DESCRIPTION);
-    expect((await runWith(getKing, KingdomType.ORC)).describe()).toBe(ORC_KING_DESCRIPTION);
+    expect((await runWith(getKing, KingdomType.ELF)).describe()).toBe(
+      ELF_KING_DESCRIPTION
+    );
+    expect((await runWith(getKing, KingdomType.ORC)).describe()).toBe(
+      ORC_KING_DESCRIPTION
+    );
   });
 
   test('verifyCastleCreation', async () => {
-    expect((await runWith(getCastle, KingdomType.ELF)).describe()).toBe(ELF_CASTLE_DESCRIPTION);
-    expect((await runWith(getCastle, KingdomType.ORC)).describe()).toBe(ORC_CASTLE_DESCRIPTION);
+    expect((await runWith(getCastle, KingdomType.ELF)).describe()).toBe(
+      ELF_CASTLE_DESCRIPTION
+    );
+    expect((await runWith(getCastle, KingdomType.ORC)).describe()).toBe(
+      ORC_CASTLE_DESCRIPTION
+    );
   });
 
   test('verifyArmyCreation', async () => {
-    expect((await runWith(getArmy, KingdomType.ELF)).describe()).toBe(ELF_ARMY_DESCRIPTION);
-    expect((await runWith(getArmy, KingdomType.ORC)).describe()).toBe(ORC_ARMY_DESCRIPTION);
+    expect((await runWith(getArmy, KingdomType.ELF)).describe()).toBe(
+      ELF_ARMY_DESCRIPTION
+    );
+    expect((await runWith(getArmy, KingdomType.ORC)).describe()).toBe(
+      ORC_ARMY_DESCRIPTION
+    );
   });
 
   test('verifyElfKingdomCreation', async () => {

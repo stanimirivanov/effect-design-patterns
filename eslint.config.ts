@@ -1,32 +1,36 @@
-import eslintPluginPrettier from 'eslint-plugin-prettier';
-import eslintPluginTs from '@typescript-eslint/eslint-plugin';
-import tsParser from '@typescript-eslint/parser';
-import prettier from 'eslint-config-prettier';
 import { defineConfig } from 'eslint/config';
+import tseslint from 'typescript-eslint';
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
+import importX from 'eslint-plugin-import-x';
 
 export default defineConfig([
   {
-    ignores: ['node_modules/**', '.vscode/**', '.idea/**'],
+    ignores: ['node_modules/**', '.vscode/**', '.idea/**', '**/bun.lock'],
   },
+  tseslint.configs.eslintRecommended,
+  ...tseslint.configs.recommended,
   {
-    files: ['**/*.ts'],
+    plugins: {
+      'import-x': importX,
+    },
     languageOptions: {
-      parser: tsParser,
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',
-        project: './tsconfig.json',
+        project: './tsconfig-base.json',
+        tsconfigRootDir: import.meta.dirname,
       },
     },
-
-    plugins: {
-      '@typescript-eslint': eslintPluginTs,
-      prettier: eslintPluginPrettier,
+    settings: {
+      // Maps multi-project tsconfig files down to ESLint
+      'import-x/resolver': {
+        typescript: {
+          alwaysTryTypes: true,
+          project: ['./tsconfig-base.json', './*/tsconfig.json'],
+        },
+      },
     },
-
     rules: {
-      ...eslintPluginTs.configs.recommended.rules,
-
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {
@@ -35,12 +39,9 @@ export default defineConfig([
           caughtErrorsIgnorePattern: '^_',
         },
       ],
-
       '@typescript-eslint/no-explicit-any': 'warn',
-
-      'prettier/prettier': 'error',
     },
   },
-
-  prettier,
+  // Automatically turns off rules that conflict with Prettier and runs Prettier as a rule
+  eslintPluginPrettierRecommended,
 ]);

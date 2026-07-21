@@ -15,10 +15,14 @@ export type Kingdom = (typeof KingdomType)[keyof typeof KingdomType];
 /**
  * Selects the factory corresponding to the requested kingdom.
  *
- * Each concrete factory is implemented as an Effect `Layer` constructing a complete family of related services.
+ * Each concrete factory is implemented as an Effect `Layer` constructing a
+ * complete family of related services.
  *
- * The returned layer provides compatible implementations of `Castle`, `King` and `Army`, allowing client code to
- * depend only on the abstract service interfaces.
+ * The returned layer provides compatible implementations of `Castle`, `King`
+ * and `Army`, allowing client code to depend only on the abstract service
+ * interfaces.
  */
-export const makeFactory = (type: Kingdom): Layer.Layer<Castle | King | Army> =>
+export const makeFactory = (
+  type: Kingdom
+): Layer.Layer<Castle | King | Army> =>
   type === KingdomType.ELF ? ElfKingdomFactory : OrcKingdomFactory;

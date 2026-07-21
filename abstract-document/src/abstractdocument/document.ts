@@ -19,6 +19,9 @@ export interface Document {
   readonly properties: Readonly<Record<string, unknown>>;
   readonly get: (key: string) => Option.Option<unknown>;
   readonly put: (key: string, value: unknown) => Document;
-  readonly children: <T>(key: string, constructor: ChildConstructor<T>) => Stream.Stream<T>;
+  readonly children: <T>(
+    key: string,
+    constructor: ChildConstructor<T>
+  ) => Stream.Stream<T>;
   readonly toString: () => string;
 }
